@@ -1,0 +1,21 @@
+# See https://help.github.com/ignore-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+
+# testing
+/coverage
+
+# production
+.next/
+.build/
+
+# misc
+.DS_Store
+*.log
+haters/
+layout.md
+variables.env
+
+# editor
+.vscode
