@@ -16,8 +16,8 @@ You can manage the service and the database via the [Prisma Cloud](https://app.p
 prisma login
 ```
 
-For deployment, because we are deploying from a custom env file, you must run:
+For deployment, because you are deploying from a custom env file, you must run a custom script:
 
 ```bash
-prisma deploy --env-file variables.env
+npm run deploy
 ```
