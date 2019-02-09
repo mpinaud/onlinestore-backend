@@ -4,6 +4,7 @@ const Query = {
     // If there is no need for authentication, filtering, custom logic, and the query is exactly the same between Yoga and Prisma.
     items: forwardTo('db'),
     item: forwardTo('db'),
+    itemsConnection: forwardTo('db'),
 
     // Alternate version
     // async items(parent, args, ctx, info) {
