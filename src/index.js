@@ -9,7 +9,7 @@ const server = createServer();
 // Use express middlware to handle cookies (JWT)
 server.express.use(cookieParser());
 
-// Middleware to decode the JWT so that we can get the user ID on each request
+// 1. Middleware to decode the JWT so that we can get the user ID on each request
 server.express.use((req, res, next) => {
     const {token} = req.cookies;
     if (token) {
@@ -17,6 +17,18 @@ server.express.use((req, res, next) => {
         // put the userId onto the req for the future requests to access
         req.userId = userId
     }
+    next();
+});
+
+// 2. Middleware that populates the user on each request
+server.express.use(async (req, res, next) => {
+    // if they aren't logged in, skip this
+    if (!req.userId) return next();
+    const user = await db.query.user(
+        { where: { id: req.userId } },
+        '{ id, permissions, email, name }'
+    );
+    req.user = user;
     next();
 });
 
