@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const {randomBytes} = require('crypto');
 // Promisify creates an async promised based function which we need for randomBytes since it's a callback based function
 const {promisify} = require('util');
+const {transport, makeANiceEmail} = require('../mail');
 
 const Mutation = {
     async createItem(parent, args, ctx, info) {
@@ -39,8 +40,20 @@ const Mutation = {
             where: {email: args.email},
             data: {resetToken, resetTokenExpiry},
         });
-        return {message: 'Thanks!'};
         // 3. Email them that reset token
+        const mailRes = await transport.sendMail({
+            from: 'michael.pinaud@gmail.com',
+            to: user.email,
+            subject: 'Your Password Reset Token',
+            html: makeANiceEmail(`Your Password Reset Token is here!
+            \n\n
+            <a href="${
+                process.env.FRONTEND_URL
+            }/reset?resetToken=${resetToken}">Click Here to Reset</a>`),
+        });
+
+        // 4. Return the message
+        return {message: 'Thanks!'};
     },
     async resetPassword(parent, args, ctx, info) {
         // 1. check if the passwords match
@@ -79,7 +92,7 @@ const Mutation = {
             httpOnly: true,
             maxAge: 1000 * 60 * 60 * 24 * 365,
         });
-        // 8. Return the new user
+        // 8. return the new user
         return updatedUser;
         // 9. HAVE A FEW 🍻!
     },
