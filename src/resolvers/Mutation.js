@@ -43,6 +43,10 @@ const Mutation = {
         // 5. Return the user
         return user;
     },
+    signout(parent, args, ctx, info) {
+        ctx.response.clearCookie('token');
+        return { message: 'Goodbye!' };
+    },
     async signup(parent, args, ctx, info) {
         // lowercase the email
         args.email = args.email.toLowerCase();
