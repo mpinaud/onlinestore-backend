@@ -5,6 +5,7 @@ type SuccessMessage {
 }
 
 type Mutation {
+  addToCart(id: ID!): CartItem
   createItem(title: String, description: String, price: Int, image: String, largeImage: String): Item!
   deleteItem(id: ID!): Item
   requestReset(email: String!): SuccessMessage
@@ -29,4 +30,5 @@ type User{
   id: ID!
   name: String!
   permissions: [Permission!]!
+  cart: [CartItem!]!
 }
