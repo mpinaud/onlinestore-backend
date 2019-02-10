@@ -4,6 +4,7 @@ const {randomBytes} = require('crypto');
 // Promisify creates an async promised based function which we need for randomBytes since it's a callback based function
 const {promisify} = require('util');
 const {transport, makeANiceEmail} = require('../mail');
+const { hasPermission } = require('../utils');
 
 const Mutation = {
     async createItem(parent, args, ctx, info) {
@@ -16,8 +17,8 @@ const Mutation = {
                     // This is how to create a relationship between the Item and the User
                     user: {
                         connect: {
-                            id: ctx.request.userId
-                        }
+                            id: ctx.request.userId,
+                        },
                     },
                     ...args,
                 },
@@ -156,6 +157,38 @@ const Mutation = {
         });
         // Finally return the user to the browser
         return user;
+    },
+    async updatePermissions(parent, args, ctx, info) {
+        // 1. Check if they are logged in
+        if (!ctx.request.userId) {
+            throw new Error('You must be logged in!');
+        }
+        // 2. Query the current user
+        const currentUser = await ctx.db.query.user(
+            {
+                where: {
+                    id: ctx.request.userId,
+                },
+            },
+            info
+        );
+        // 3. Check if they have permissions to do this
+        hasPermission(currentUser, ['ADMIN', 'PERMISSIONUPDATE']);
+        // 4. Update the permissions
+        return ctx.db.mutation.updateUser(
+            {
+                data: {
+                    permissions: {
+                        // Set is used for ENUMS
+                        set: args.permissions,
+                    },
+                },
+                where: {
+                    id: args.userId,
+                },
+            },
+            info
+        );
     },
     updateItem(parent, args, ctx, info) {
         // First take a copy of the updates
