@@ -44,6 +44,20 @@ const Query = {
         // 4. Return the order
         return order;
     },
+    async orders(parent, args, ctx, info) {
+        const { userId } = ctx.request;
+        if (!userId) {
+            throw new Error('you must be signed in!');
+        }
+        return ctx.db.query.orders(
+            {
+                where: {
+                    user: { id: userId },
+                },
+            },
+            info
+        );
+    },
     async users(parent, args, ctx, info) {
         // 1. Check if they are logged in
         if (!ctx.request.userId) {

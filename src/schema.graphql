@@ -24,8 +24,9 @@ type Query {
   items(where: ItemWhereInput, orderBy: ItemOrderByInput, skip: Int, first: Int): [Item]!
   itemsConnection(where: ItemWhereInput): ItemConnection!
   me: User
-  users: [User]!
   order(id: ID!): Order
+  orders(orderBy: OrderOrderByInput): [Order]!
+  users: [User]!
 }
 
 type User{
