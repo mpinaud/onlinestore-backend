@@ -8,6 +8,7 @@ type Mutation {
   addToCart(id: ID!): CartItem
   createItem(title: String, description: String, price: Int, image: String, largeImage: String): Item!
   deleteItem(id: ID!): Item
+  removeFromCart(id: ID!): CartItem
   requestReset(email: String!): SuccessMessage
   resetPassword(resetToken: String!, password: String!, confirmPassword: String!): User!
   signin(email: String!, password: String!): User!
