@@ -32,7 +32,7 @@ type Item {
 
 type CartItem {
     id: ID! @unique
-    item: Item! # relationship to Item
+    item: Item # relationship to Item
     quantity: Int! @default(value: 1)
     user: User! # relationship to User
 }
